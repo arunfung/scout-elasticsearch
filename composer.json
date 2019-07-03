@@ -1,0 +1,41 @@
+{
+    "name": "arunfung/scout-elasticsearch",
+    "description": "Laravel Scout ElasticSearch Driver",
+    "keywords": ["laravel", "scout", "elastic", "search", "elasticsearch"],
+    "type": "library",
+    "license": "MIT",
+    "support": {
+        "issues": "https://github.com/arunfung/scout-elasticsearch/issues",
+        "source": "https://github.com/arunfung/scout-elasticsearch"
+    },
+    "authors": [
+        {
+            "name": "Arun",
+            "email": "arunfung@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^7.1",
+        "laravel/scout": "^7.1",
+        "elasticsearch/elasticsearch": "^7.0"
+    },
+    "require-dev": {
+        "mockery/mockery": "~1.0",
+        "phpunit/phpunit": "~7.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "ArunFung\\ScoutElasticSearch\\": "/src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

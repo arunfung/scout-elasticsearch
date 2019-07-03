@@ -1,2 +1,2 @@
-# scout-elasticsearch
+# scout-elastic-search
 Laravel Scout ElasticSearch Driver
