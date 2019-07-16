@@ -7,3 +7,13 @@
 
 # scout-elastic-search
 Laravel Scout ElasticSearch Driver
+
+- v0.0.1
+```php
+Initialization project
+```
+
+- v0.0.2
+```php
+create elasticSearch index
+```

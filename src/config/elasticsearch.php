@@ -17,4 +17,28 @@ return [
             'scheme' => env('ELASTIC_SEARCH_SCHEME', 'http'),
         ],
     ],
+    // index config
+    env('ELASTIC_SEARCH_INDEX') => [
+        'index' => env('ELASTIC_SEARCH_INDEX'),
+        'body' => [
+            'settings' => [
+                'refresh_interval' => '5s',
+                'number_of_shards' => 3,
+                'number_of_replicas' => 0,
+                'analysis' => [
+                    'analyzer' => [
+                        "ik" => [
+                            "tokenizer" => "standard"
+                        ]
+                    ]
+                ]
+            ],
+            'mappings' => [
+                '_source' => [
+                    'enabled' => true
+                ],
+                'properties' => []
+            ]
+        ]
+    ],
 ];
