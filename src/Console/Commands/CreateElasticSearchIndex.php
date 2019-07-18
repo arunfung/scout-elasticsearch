@@ -11,6 +11,7 @@ namespace ArunFung\ScoutElasticSearch\Console\Commands;
 use Elasticsearch\ClientBuilder as ElasticSearchBuilder;
 use Illuminate\Console\Command;
 use Exception;
+use Illuminate\Support\Facades\Config;
 
 /**
  * Class CreateElasticSearchIndex
@@ -39,14 +40,14 @@ class CreateElasticSearchIndex extends Command
      */
     public function handle()
     {
-        $elasticSearch = ElasticSearchBuilder::create()->setHosts(config('elasticsearch.hosts'))->build()->indices();
+        $elasticSearch = ElasticSearchBuilder::create()->setHosts(Config::get('elasticsearch.hosts'))->build()->indices();
 
-        $index = config('elasticsearch.index');
+        $index = Config::get('elasticsearch.index');
         if ($elasticSearch->exists(['index' => $index])) {
             $this->error(sprintf('The "%s" index already exists', $index));
             return;
         }
-        $params = config('elasticsearch.' . $index);
+        $params = Config::get('elasticsearch.' . $index);
 
         if (!empty($params)) {
             try {

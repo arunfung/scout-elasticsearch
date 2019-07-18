@@ -9,6 +9,7 @@
 namespace ArunFung\ScoutElasticSearch;
 
 use ArunFung\ScoutElasticSearch\Console\Commands\CreateElasticSearchIndex;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Scout\EngineManager;
 use Elasticsearch\ClientBuilder as ElasticSearchBuilder;
@@ -44,8 +45,8 @@ class ElasticSearchServiceProvider extends ServiceProvider
 
         resolve(EngineManager::class)->extend('elasticsearch', function () {
             return new ElasticSearchEngine(
-                ElasticSearchBuilder::create()->setHosts(config('elasticsearch.hosts'))->build(),
-                config('elasticsearch.index')
+                ElasticSearchBuilder::create()->setHosts(Config::get('elasticsearch.hosts'))->build(),
+                Config::get('elasticsearch.index')
             );
         });
 
