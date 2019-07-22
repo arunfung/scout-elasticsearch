@@ -20,6 +20,19 @@ class ElasticSearchEngineTest extends TestCase
         Mockery::close();
     }
 
+    protected function setUp(): void
+    {
+        $elasticsearch = Elasticsearch\ClientBuilder::create()->setHosts([
+            [
+                'host' => '127.0.0.1',
+                "port" =>  9200,
+                'user' => '',
+                'pass' => '',
+                'scheme' => 'http',
+            ],
+        ])->build();
+    }
+
     public function testElasticSearchEngineUpdate()
     {
         $testModel = Mockery::mock(Model::class);
@@ -47,5 +60,33 @@ class ElasticSearchEngineTest extends TestCase
         $elasticSearchEngine = new ElasticSearchEngine($elasticsearch, $this->index);
 
         $elasticSearchEngine->update($testModels);
+    }
+
+    public function testElasticSearchEngineDelete()
+    {
+        $testModel = Mockery::mock(Model::class);
+
+        $testModel->shouldReceive([
+            'searchableAs' => 'test_type',
+            'getScoutKey'  => 1,
+            'toSearchableArray' => ['id' => 1,'body' => 'test_body','content' => 'test_content']
+        ]);
+        $testModels = Collection::make([$testModel]);
+
+        $elasticsearch = Mockery::mock(Elasticsearch\Client::class);
+
+        $params['body'][] = [
+            'delete' => [
+                '_index' => $this->index,
+                '_type' => 'test_type',
+                '_id' => 1
+            ]
+        ];
+
+        $elasticsearch->shouldReceive('bulk')->with($params);
+
+        $elasticSearchEngine = new ElasticSearchEngine($elasticsearch, $this->index);
+
+        $elasticSearchEngine->delete($testModels);
     }
 }
