@@ -10,6 +10,7 @@ use ArunFung\ScoutElasticSearch\ElasticSearchEngine;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use PHPUnit\Framework\TestCase;
+use Elasticsearch\ClientBuilder as ElasticSearchBuilder;
 
 class ElasticSearchEngineTest extends TestCase
 {
@@ -25,7 +26,7 @@ class ElasticSearchEngineTest extends TestCase
         $elasticsearch = Elasticsearch\ClientBuilder::create()->setHosts([
             [
                 'host' => '127.0.0.1',
-                "port" =>  9200,
+                "port" => 9200,
                 'user' => '',
                 'pass' => '',
                 'scheme' => 'http',
@@ -38,10 +39,10 @@ class ElasticSearchEngineTest extends TestCase
         $testModel = Mockery::mock(Model::class);
 
         $testModel->shouldReceive([
-                'searchableAs' => 'test_type',
-                'getScoutKey'  => 1,
-                'toSearchableArray' => ['id' => 1,'body' => 'test_body','content' => 'test_content']
-            ]);
+            'searchableAs' => 'test_type',
+            'getScoutKey' => 1,
+            'toSearchableArray' => ['id' => 1, 'body' => 'test_body', 'content' => 'test_content']
+        ]);
         $testModels = Collection::make([$testModel]);
 
         $elasticsearch = Mockery::mock(Elasticsearch\Client::class);
@@ -53,7 +54,7 @@ class ElasticSearchEngineTest extends TestCase
                 '_id' => 1
             ]
         ];
-        $params['body'][] = ['id' => 1,'body' => 'test_body','content' => 'test_content'];
+        $params['body'][] = ['id' => 1, 'body' => 'test_body', 'content' => 'test_content'];
 
         $elasticsearch->shouldReceive('bulk')->with($params);
 
@@ -68,8 +69,8 @@ class ElasticSearchEngineTest extends TestCase
 
         $testModel->shouldReceive([
             'searchableAs' => 'test_type',
-            'getScoutKey'  => 1,
-            'toSearchableArray' => ['id' => 1,'body' => 'test_body','content' => 'test_content']
+            'getScoutKey' => 1,
+            'toSearchableArray' => ['id' => 1, 'body' => 'test_body', 'content' => 'test_content']
         ]);
         $testModels = Collection::make([$testModel]);
 
@@ -88,5 +89,17 @@ class ElasticSearchEngineTest extends TestCase
         $elasticSearchEngine = new ElasticSearchEngine($elasticsearch, $this->index);
 
         $elasticSearchEngine->delete($testModels);
+    }
+
+    public function testElasticSearchEngineGetTotalCount()
+    {
+        $results = ['hits' => ['total' => ['value' => 10]]];
+
+        $elasticSearchEngine = new ElasticSearchEngine(ElasticSearchBuilder::create()->build(), $this->index);
+
+        $this->assertEquals(
+            10,
+            $elasticSearchEngine->getTotalCount($results)
+        );
     }
 }

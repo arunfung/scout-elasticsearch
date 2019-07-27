@@ -145,7 +145,7 @@ class ElasticSearchEngine extends Engine
      */
     public function getTotalCount($results)
     {
-        // TODO: Implement getTotalCount() method.
+        return $results['hits']['total']['value'];
     }
 
     /**
