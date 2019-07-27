@@ -11,6 +11,7 @@ namespace ArunFung\ScoutElasticSearch;
 use Laravel\Scout\Builder;
 use Laravel\Scout\Engines\Engine;
 use Elasticsearch\Client as ElasticSearch;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
 
 /**
@@ -150,11 +151,11 @@ class ElasticSearchEngine extends Engine
     /**
      * Flush all of the model's records from the engine.
      *
-     * @param \Illuminate\Database\Eloquent\Model $model
+     * @param Model $model
      * @return void
      */
     public function flush($model)
     {
-        // TODO: Implement flush() method.
+        $model->newQuery()->orderBy($model->getKeyName())->unsearchable();
     }
 }
