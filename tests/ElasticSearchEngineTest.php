@@ -91,6 +91,27 @@ class ElasticSearchEngineTest extends TestCase
         $elasticSearchEngine->delete($testModels);
     }
 
+    public function testElasticSearchEngineMapIds()
+    {
+        $results = [
+            'hits' => [
+                'hits' => [
+                    ['_id' => 1],
+                    ['_id' => 2],
+                    ['_id' => 3],
+                    ['_id' => 4],
+                ],
+            ],
+        ];
+
+        $elasticSearchEngine = new ElasticSearchEngine(ElasticSearchBuilder::create()->build(), $this->index);
+
+        $this->assertEquals(
+            [1, 2, 3, 4],
+            $elasticSearchEngine->mapIds($results)->all()
+        );
+    }
+
     public function testElasticSearchEngineGetTotalCount()
     {
         $results = ['hits' => ['total' => ['value' => 10]]];
