@@ -92,12 +92,15 @@ class ElasticSearchEngine extends Engine
     /**
      * Perform the given search on the engine.
      *
-     * @param \Laravel\Scout\Builder $builder
+     * @param Builder $builder
      * @return mixed
      */
     public function search(Builder $builder)
     {
-        // TODO: Implement search() method.
+        return $this->performSearch($builder, array_filter([
+            'numericFilters' => $this->filters($builder),
+            'size' => $builder->limit,
+        ]));
     }
 
     /**
