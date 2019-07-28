@@ -103,14 +103,86 @@ class ElasticSearchEngine extends Engine
     /**
      * Perform the given search on the engine.
      *
-     * @param \Laravel\Scout\Builder $builder
+     * @param Builder $builder
      * @param int $perPage
      * @param int $page
      * @return mixed
      */
     public function paginate(Builder $builder, $perPage, $page)
     {
-        // TODO: Implement paginate() method.
+        $options = [
+            'numericFilters' => $this->filters($builder),
+            'from' => (($page - 1) * $perPage),
+            'size' => $perPage,
+        ];
+
+        return $this->performSearch($builder, $options);
+    }
+
+    /**
+     * Perform the given search on the engine.
+     *
+     * @param Builder $builder
+     * @param array $options
+     * @return mixed
+     */
+    protected function performSearch(Builder $builder, array $options = [])
+    {
+        $params = [
+            'index' => $this->index,
+            'type' => $builder->model->searchableAs(),
+        ];
+
+        $must = [['query_string' => ['query' => "*{$builder->query}*"]]];
+
+        if (isset($options['numericFilters']) && count($options['numericFilters'])) {
+            $must = array_merge($must, $options['numericFilters']);
+        }
+
+        $body = [
+            'query' => [
+                'bool' => [
+                    'must' => $must
+                ]
+            ]
+        ];
+
+        if (isset($options['from'])) {
+            $body['from'] = $options['from'];
+        }
+
+        if (isset($options['size'])) {
+            $body['size'] = $options['size'];
+        }
+
+        $params['body'] = $body;
+
+        if ($builder->callback) {
+            return call_user_func(
+                $builder->callback,
+                $this->elasticSearch,
+                $builder->query,
+                $params
+            );
+        }
+
+        return $this->elasticSearch->search();
+    }
+
+    /**
+     * Get the filter array for the query.
+     *
+     * @param Builder $builder
+     * @return array
+     */
+    protected function filters(Builder $builder)
+    {
+        return collect($builder->wheres)->map(function ($value, $key) {
+            if (is_array($value)) {
+                return ['terms' => [$key => $value]];
+            }
+            return ['match_phrase' => [$key => $value]];
+        })->values()->all();
     }
 
     /**
@@ -127,14 +199,22 @@ class ElasticSearchEngine extends Engine
     /**
      * Map the given results to instances of the given model.
      *
-     * @param \Laravel\Scout\Builder $builder
+     * @param Builder $builder
      * @param mixed $results
-     * @param \Illuminate\Database\Eloquent\Model $model
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @param Model $model
+     * @return Collection
      */
     public function map(Builder $builder, $results, $model)
     {
-        // TODO: Implement map() method.
+        if ($this->getTotalCount($results) == 0) {
+            return $model->newCollection();
+        }
+
+        $ids = $this->mapIds($results)->all();
+
+        return $model->getScoutModelsByIds($builder, $ids)->filter(function ($model) use ($ids) {
+            return in_array($model->getScoutKey(), $ids);
+        });
     }
 
     /**
