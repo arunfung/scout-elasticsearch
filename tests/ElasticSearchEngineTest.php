@@ -7,10 +7,12 @@
  */
 
 use ArunFung\ScoutElasticSearch\ElasticSearchEngine;
+use Laravel\Scout\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use PHPUnit\Framework\TestCase;
 use Elasticsearch\ClientBuilder as ElasticSearchBuilder;
+use Elasticsearch\Client;
 
 class ElasticSearchEngineTest extends TestCase
 {
@@ -45,7 +47,7 @@ class ElasticSearchEngineTest extends TestCase
         ]);
         $testModels = Collection::make([$testModel]);
 
-        $elasticsearch = Mockery::mock(Elasticsearch\Client::class);
+        $elasticsearch = Mockery::mock(Client::class);
 
         $params['body'][] = [
             'index' => [
@@ -74,7 +76,7 @@ class ElasticSearchEngineTest extends TestCase
         ]);
         $testModels = Collection::make([$testModel]);
 
-        $elasticsearch = Mockery::mock(Elasticsearch\Client::class);
+        $elasticsearch = Mockery::mock(Client::class);
 
         $params['body'][] = [
             'delete' => [
@@ -110,6 +112,58 @@ class ElasticSearchEngineTest extends TestCase
             [1, 2, 3, 4],
             $elasticSearchEngine->mapIds($results)->all()
         );
+    }
+
+    public function testElasticSearchEngineMap()
+    {
+        $builder = Mockery::mock(Builder::class);
+        $testModel = Mockery::mock(Model::class);
+
+        $testModel->shouldReceive('getScoutKey')->andReturn('1');
+        $testModel->shouldReceive('getScoutModelsByIds')->with($builder, ['1'])->andReturn($models = Collection::make([$testModel]));
+
+        $results = [
+            'hits' => [
+                "total" => [
+                    "value" => 1,
+                    "relation" => "eq"
+                ],
+                "max_score" => 1,
+                "hits" => [
+                    [
+                        "_index" => $this->index,
+                        "_type" => "scout",
+                        "_id" => 1,
+                        "_score" => 1,
+                        "_source" => [
+                            "id" => 1,
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        $elasticsearch = Mockery::mock(Client::class);
+        $elasticSearchEngine = new ElasticsearchEngine($elasticsearch, $this->index);
+
+        $data = $elasticSearchEngine->map($builder, $results, $testModel);
+
+        $this->assertEquals(1, $data->count());
+
+        $results = [
+            'hits' => [
+                "total" => [
+                    "value" => 0,
+                    "relation" => "eq"
+                ],
+                "max_score" => 1,
+                "hits" => [
+                ]
+            ]
+        ];
+        $emptyData = $elasticSearchEngine->map($builder, $results, $testModel);
+
+        $this->assertEquals(0, $emptyData->count());
     }
 
     public function testElasticSearchEngineGetTotalCount()

@@ -210,7 +210,7 @@ class ElasticSearchEngine extends Engine
     public function map(Builder $builder, $results, $model)
     {
         if ($this->getTotalCount($results) == 0) {
-            return $model->newCollection();
+            return Collection::make();
         }
 
         $ids = $this->mapIds($results)->all();
