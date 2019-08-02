@@ -136,7 +136,11 @@ class ElasticSearchEngine extends Engine
             'type' => $builder->model->searchableAs(),
         ];
 
-        $must = [['query_string' => ['query' => "*{$builder->query}*"]]];
+        $must = [
+            [
+                'query_string' => ['query' => "{$builder->query}"]
+            ]
+        ];
 
         if (isset($options['numericFilters']) && count($options['numericFilters'])) {
             $must = array_merge($must, $options['numericFilters']);
@@ -169,7 +173,7 @@ class ElasticSearchEngine extends Engine
             );
         }
 
-        return $this->elasticSearch->search();
+        return $this->elasticSearch->search($params);
     }
 
     /**

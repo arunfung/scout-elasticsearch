@@ -6,6 +6,7 @@
  * Time: 11:46
  */
 
+use Mockery as m;
 use ArunFung\ScoutElasticSearch\ElasticSearchEngine;
 use Laravel\Scout\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -20,7 +21,7 @@ class ElasticSearchEngineTest extends TestCase
 
     protected function tearDown(): void
     {
-        Mockery::close();
+        m::close();
     }
 
     protected function setUp(): void
@@ -38,7 +39,7 @@ class ElasticSearchEngineTest extends TestCase
 
     public function testElasticSearchEngineUpdate()
     {
-        $testModel = Mockery::mock(Model::class);
+        $testModel = m::mock(Model::class);
 
         $testModel->shouldReceive([
             'searchableAs' => 'test_type',
@@ -47,7 +48,7 @@ class ElasticSearchEngineTest extends TestCase
         ]);
         $testModels = Collection::make([$testModel]);
 
-        $elasticsearch = Mockery::mock(Client::class);
+        $elasticsearch = m::mock(Client::class);
 
         $params['body'][] = [
             'index' => [
@@ -67,7 +68,7 @@ class ElasticSearchEngineTest extends TestCase
 
     public function testElasticSearchEngineDelete()
     {
-        $testModel = Mockery::mock(Model::class);
+        $testModel = m::mock(Model::class);
 
         $testModel->shouldReceive([
             'searchableAs' => 'test_type',
@@ -76,7 +77,7 @@ class ElasticSearchEngineTest extends TestCase
         ]);
         $testModels = Collection::make([$testModel]);
 
-        $elasticsearch = Mockery::mock(Client::class);
+        $elasticsearch = m::mock(Client::class);
 
         $params['body'][] = [
             'delete' => [
@@ -92,6 +93,47 @@ class ElasticSearchEngineTest extends TestCase
 
         $elasticSearchEngine->delete($testModels);
     }
+
+    public function testElasticSearchEngineSearch()
+    {
+        $builder = m::mock(Builder::class);
+        $testModel = m::mock(Model::class);
+
+        $testModel->shouldReceive([
+            'searchableAs' => 'test_type',
+        ]);
+
+        $builder->query = 'test';
+        $builder->model = $testModel;
+        $builder->wheres = ["status" => 1];
+        $builder->limit = 10;
+
+        $params = [
+            'index' => $this->index,
+            'type' => 'test_type',
+            'body' => [
+                'query' => [
+                    'bool' => [
+                        'must' => [
+                            [
+                                'query_string' => [
+                                    'query' => "test"
+                                ]
+                            ],
+                            ['match_phrase' => ['status' => 1]],
+                        ]
+                    ]
+                ],
+                'size' => 10,
+            ]
+        ];
+        $elasticsearch = m::mock(Client::class);
+        $elasticsearch->shouldReceive('search')->with($params);
+        $elasticSearchEngine = new ElasticsearchEngine($elasticsearch, $this->index);
+
+        $elasticSearchEngine->search($builder);
+    }
+
 
     public function testElasticSearchEngineMapIds()
     {
@@ -116,8 +158,8 @@ class ElasticSearchEngineTest extends TestCase
 
     public function testElasticSearchEngineMap()
     {
-        $builder = Mockery::mock(Builder::class);
-        $testModel = Mockery::mock(Model::class);
+        $builder = m::mock(Builder::class);
+        $testModel = m::mock(Model::class);
 
         $testModel->shouldReceive('getScoutKey')->andReturn('1');
         $testModel->shouldReceive('getScoutModelsByIds')->with($builder, ['1'])->andReturn($models = Collection::make([$testModel]));
@@ -143,7 +185,7 @@ class ElasticSearchEngineTest extends TestCase
             ]
         ];
 
-        $elasticsearch = Mockery::mock(Client::class);
+        $elasticsearch = m::mock(Client::class);
         $elasticSearchEngine = new ElasticsearchEngine($elasticsearch, $this->index);
 
         $data = $elasticSearchEngine->map($builder, $results, $testModel);
