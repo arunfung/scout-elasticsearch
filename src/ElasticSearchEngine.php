@@ -218,9 +218,12 @@ class ElasticSearchEngine extends Engine
         }
 
         $ids = $this->mapIds($results)->all();
+        $objectIdPositions = array_flip($ids);
 
         return $model->getScoutModelsByIds($builder, $ids)->filter(function ($model) use ($ids) {
             return in_array($model->getScoutKey(), $ids);
+        })->sortBy(function ($model) use ($objectIdPositions) {
+            return $objectIdPositions[$model->getScoutKey()];
         });
     }
 
