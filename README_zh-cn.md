@@ -7,24 +7,19 @@
 
 # scout-elastic-search
 
-[English](https://github.com/arunfung/scout-elasticsearch) | 
-[中文](https://github.com/arunfung/scout-elasticsearch/blob/master/README_zh-cn.md)
+## 介绍
 
-## Introduction
+目前，laravel Scout 只支持 Algolia 驱动程序，这个包是 laravel Scout 的 ElasticSearch 驱动程序。
 
-Currently, laravel Scout only supports Algolia driver,
-This package is ElasticSearch driver for laravel Scout.
+## 安装
 
-## Installation
-
-Install the package via composer:
+通过 composer 安装:
 
 ``` bash
 composer require arunfung/scout-elasticsearch
 ```
 
-If you are using Laravel version < 5.5 or the package discovery is disabled, Must add the Scout service provider and the package service provider in your `app.php`
-
+如果使用的 Laravel 版本小于 5.5 或禁用了包发现，则必须在 “app.php” 中添加 Scout 服务提供者和这个包的服务提供者。
 ```php
 /*
  * Package Service Providers...
@@ -33,25 +28,25 @@ Laravel\Scout\ScoutServiceProvider::class,
 ArunFung\ScoutElasticSearch\ElasticSearchServiceProvider::class,
 ```
 
-## Configuration
+## 配置
 
-- Publish settings
+- 发布配置
 
 ```php
 php artisan vendor:publish --provider="Laravel\Scout\ScoutServiceProvider"
 php artisan vendor:publish --provider="ArunFung\ScoutElasticSearch\ElasticSearchServiceProvider"
 ```
 
-- Create a new ElasticSearch index
+- 创建一个新的 ElasticSearch 索引
 
 ```php
-// add index name into .env
+// 将索引名配置添加到 .env
 ELASTIC_SEARCH_INDEX=index name
 
-// Create a generic index mapping
+// 创建通用索引及映射
 php artisan es:create-index
 ```
 
-## Usage
+## 使用
 
-Documentation for Scout can be found on the [Laravel website](https://laravel.com/docs/master/scout).
+有关 Scout 的使用文档可以在 [Laravel 中文网站](https://learnku.com/docs/laravel/5.8/scout/3946) 上查找。

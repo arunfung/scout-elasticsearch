@@ -28,6 +28,17 @@
             "ArunFung\\ScoutElasticSearch\\": "src/"
         }
     },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "ArunFung\\ScoutElasticSearch\\ElasticSearchServiceProvider"
+            ]
+        }
+    },
+    "suggest": {
+        "laravel/scout": "Required laravel scout (^7.1).",
+        "elasticsearch/elasticsearch": "Required to use the ElasticSearch engine (^7.0)."
+    },
     "config": {
         "sort-packages": true
     },
