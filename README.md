@@ -1,9 +1,11 @@
-[![Build Status](https://travis-ci.com/arunfung/scout-elasticsearch.svg?branch=master)](https://travis-ci.com/arunfung/scout-elasticsearch)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/arunfung/scout-elasticsearch/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/arunfung/scout-elasticsearch/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/arunfung/scout-elasticsearch/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/arunfung/scout-elasticsearch/?branch=master)
-[![Latest Stable Version](https://poser.pugx.org/arunfung/scout-elasticsearch/v/stable)](https://packagist.org/packages/arunfung/scout-elasticsearch)
-[![Total Downloads](https://poser.pugx.org/arunfung/scout-elasticsearch/downloads)](https://packagist.org/packages/arunfung/scout-elasticsearch)
-[![License](https://poser.pugx.org/arunfung/scout-elasticsearch/license)](https://packagist.org/packages/arunfung/scout-elasticsearch)
+<p align="center">
+<a href="https://travis-ci.com/arunfung/scout-elasticsearch"><img src="https://travis-ci.com/arunfung/scout-elasticsearch.svg" alt="Build Status"></a>
+<a href="https://scrutinizer-ci.com/g/arunfung/scout-elasticsearch/?branch=master"><img src="https://scrutinizer-ci.com/g/arunfung/scout-elasticsearch/badges/quality-score.png?b=master" alt="Scrutinizer Code Quality"></a>
+<a href="https://scrutinizer-ci.com/g/arunfung/scout-elasticsearch/?branch=master"><img src="https://scrutinizer-ci.com/g/arunfung/scout-elasticsearch/badges/coverage.png?b=master" alt="Code Coverage"></a>
+<a href="https://packagist.org/packages/arunfung/scout-elasticsearch"><img src="https://poser.pugx.org/arunfung/scout-elasticsearch/downloads" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/arunfung/scout-elasticsearch"><img src="https://poser.pugx.org/arunfung/scout-elasticsearch/v/stable" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/arunfung/scout-elasticsearch"><img src="https://poser.pugx.org/arunfung/scout-elasticsearch/license" alt="License"></a>
+</p>
 
 # scout-elastic-search
 
