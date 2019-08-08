@@ -44,7 +44,16 @@ php artisan vendor:publish --provider="Laravel\Scout\ScoutServiceProvider"
 php artisan vendor:publish --provider="ArunFung\ScoutElasticSearch\ElasticSearchServiceProvider"
 ```
 
+- Set scout driver in `.env`
+
+```php
+// Set scout driver to elasticsearch
+SCOUT_DRIVER=elasticsearch
+```
+
 - Create a new ElasticSearch index
+
+If you need to set the mapping, you can set it in `config/elasticsearch.php`
 
 ```php
 // add index name into .env

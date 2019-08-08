@@ -39,7 +39,16 @@ php artisan vendor:publish --provider="Laravel\Scout\ScoutServiceProvider"
 php artisan vendor:publish --provider="ArunFung\ScoutElasticSearch\ElasticSearchServiceProvider"
 ```
 
+- 在 `.env` 设置 scout 驱动
+
+```php
+// 设置 scout 驱动为 elasticsearch
+SCOUT_DRIVER=elasticsearch
+```
+
 - 创建一个新的 ElasticSearch 索引
+
+如果需要自定义`index mapping` 你可以在 `config/elasticsearch.php` 中设置
 
 ```php
 // 将索引名配置添加到 .env
